@@ -1,0 +1,24 @@
+{% extends "main.html" %}
+{% block content %}
+<h1> Add new journal </h1>
+<div class="form-group">
+<form method="POST" enctype="multipart/form-data"  action="#">
+<label for="name">Title: </label><input class="form-control"type="text" name="name" required>
+<label for="issn">ISSN: </label><input  class="form-control"type="text" name="issn" required>
+<label for="publisher">Publisher: </label><input  class="form-control" type="text" name="publisher">
+<label for="editor">Editor-in-chief: </label><input  class="form-control" type="text" name="editor">
+<label for="discipline"> Discipline: </label>
+<select class ="form-control" name="discipline">
+{% for d in disciplines %}
+	<option value="{{d.id}}"> {{d.name}} </option>
+}
+{% endfor %}
+</select>
+<label for="issues">Issues per year: </label><input  class="form-control" type="number" name="issues">
+<label for="foundation">Founded (year): </label><input  class="form-control" type="number" name="foundation">
+<label for="description">Description: </label><input class="form-control" type="text" name="description">
+<label for="picture"> Cover picture: </label> <input  class="form-control" type="file" name="picture">
+<input class="btn btn-default" type="submit" value="Add">
+</form>
+</div>
+{% endblock %}

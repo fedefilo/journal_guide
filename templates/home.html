@@ -1,0 +1,17 @@
+{% extends "main.html" %}
+{% block content %}
+<h4> <a href="{{url_for('newDiscipline')}}"> Add New Discipline</a></h4>
+<h4> <a href="{{url_for('newJournal')}}"> Add New Journal</a></h4>
+<br><br>
+
+{% for d in disciplines %}
+	<h5> <a href="{{url_for('discipline', discipline_id = d.id)}}">{{d.name}} </a></h5>
+	<p> <a href="{{url_for('deleteDiscipline', discipline_id = d.id)}}"> Delete </a></p>
+{% endfor %}
+<br><br>
+{% for j in items %}
+	<p><a href="{{url_for('journalPage', journal_id = j.id)}}"> {{j.title}} </a></p>
+	<p> <a href="{{url_for('deleteJournal', journal_id = j.id)}}"> Delete </a></p>
+{% endfor %}
+
+{% endblock %}

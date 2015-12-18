@@ -1,0 +1,15 @@
+{% extends "main.html" %}
+{% block content %}
+
+	<h2> {{item.title}} </h2>
+	<img src="{{url_for('static', filename="pictures/" + item.picture)}}" alt="Journal cover">
+	
+	<p> <em>ISSN: </em>{{item.issn}}</p>
+	<p> <em>Publisher: </em>{{item.publisher}}</p>
+	<p> <em>Editor-in-chief: </em>{{item.chief_editor}}</p>
+	<p> <em>Discipline: </em><a href="{{url_for('discipline', discipline_id = item.discipline_id)}}"> {{discipline}}</a></p>
+	<p> <em>Issues per year: </em>{{item.issues_per_year}}</p>
+	<p> <em>Founded: </em>{{item.foundation_year}}</p>
+	<p> <em>Description: </em>{{item.description}}</p>
+
+{% endblock %}
