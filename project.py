@@ -163,6 +163,28 @@ def editJournal(journal_id):
 		 		journal.picture = filename	
 		return redirect(url_for('journalPage', journal_id = journal_id))
 
+# JSON API routes
+
+@app.route('/disciplines/JSON')
+def disciplinesJSON():
+    disciplines = session.query(Disciplines).all()
+    return jsonify(Disciplines = [i.serialize for i in disciplines])
+
+@app.route('/disciplines/<int:discipline_id>/JSON')
+def journaldisciplineJSON(discipline_id):
+	journal_list = session.query(Journals).filter(Journals.discipline_id == discipline_id)
+	return jsonify(Journals = [j.serialize for j in journal_list])
+
+@app.route('/journal/<int:journal_id>/JSON')
+def journalJSON(journal_id):
+	journal = session.query(Journals).filter(Journals.id == journal_id).one()
+	return jsonify(Journals = [journal.serialize])
+
+# @app.route('/disciplines/XML')
+# def disciplinesXML():
+#     disciplines = session.query(Disciplines).all()
+#     print [i.serialize for i in disciplines]
+#     return 
 
 # @app.route('/login')
 

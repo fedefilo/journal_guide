@@ -22,6 +22,13 @@ class Disciplines(Base):
 	name = Column(String(80), nullable = False)
 	id = Column(Integer, primary_key = True)
 
+	@property
+	def serialize(self):
+		"""Return object data in easily serializeable format"""
+		return {
+			'id'     : self.id,
+			'name'  : self.name,
+		}
 
 class Users(Base):
 	__tablename__ = 'users'
@@ -48,7 +55,20 @@ class Journals(Base):
 	disciplines = relationship(Disciplines)
 	users = relationship(Users)
 
-
+	@property
+	def serialize(self):
+		"""Return object data in easily serializeable format"""
+		return {
+			'id'     : self.id,
+			'title'  : self.title,
+			'issn'	: self.issn,
+			'publisher' : self.publisher,
+			'editor_in_chief' : self.chief_editor,
+			'issues_per_year' : self.issues_per_year,
+			'foundation_year' : self.foundation_year,
+			'description'     : self.description,
+			'discipline_id'   : self.discipline_id, 
+		}
 ## final
 
 engine = create_engine('sqlite:///journals.db')
