@@ -5,7 +5,7 @@ from sqlalchemy.orm import sessionmaker
 from database_setup import Users, Disciplines, Journals, Base
 #from oauth import *
 from werkzeug import secure_filename
-
+from xmlconverter import *
 
 UPLOAD_FOLDER = 'static/pictures'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
@@ -29,6 +29,8 @@ session = DBSession()
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+#app.debug = True
+
 # Allowed file extensions
 def allowed_file(filename):
     return '.' in filename and \
@@ -37,7 +39,7 @@ def allowed_file(filename):
 # Home Page
 @app.route('/')
 def HomePage():
-	allr = session.query(Journals).all()
+	allr = session.query(Journals).join(Disciplines, Disciplines.id == Journals.discipline_id)
 	disciplines = session.query(Disciplines).all()
 	return render_template('home.html', title = "HomePage", items = allr, disciplines = disciplines)
 
@@ -167,12 +169,12 @@ def editJournal(journal_id):
 
 @app.route('/disciplines/JSON')
 def disciplinesJSON():
-    disciplines = session.query(Disciplines).all()
-    return jsonify(Disciplines = [i.serialize for i in disciplines])
+	disciplines = session.query(Disciplines).all()
+	return jsonify(Disciplines = [i.serialize for i in disciplines])
 
 @app.route('/disciplines/<int:discipline_id>/JSON')
 def journaldisciplineJSON(discipline_id):
-	journal_list = session.query(Journals).filter(Journals.discipline_id == discipline_id)
+	journal_list = session.query(Journals).filter(Journals.discipline_id == discipline_id).all()
 	return jsonify(Journals = [j.serialize for j in journal_list])
 
 @app.route('/journal/<int:journal_id>/JSON')
@@ -180,11 +182,34 @@ def journalJSON(journal_id):
 	journal = session.query(Journals).filter(Journals.id == journal_id).one()
 	return jsonify(Journals = [journal.serialize])
 
-# @app.route('/disciplines/XML')
-# def disciplinesXML():
-#     disciplines = session.query(Disciplines).all()
-#     print [i.serialize for i in disciplines]
-#     return 
+# XML endpoints
+# With help from library https://github.com/delfick/python-dict2xml
+
+@app.route('/disciplines/XML')
+def disciplinesXML():
+	disciplines = session.query(Disciplines).all()
+	serialized_list = [i.serialize for i in disciplines]
+	dictionary = {}
+	dictionary['discipline'] = serialized_list
+	parsed_xml = dict2xml(dictionary, wrap="discipline", indent="    ")
+	return render_template('xml.xml', parsed_xml = parsed_xml)
+
+
+@app.route('/disciplines/<int:discipline_id>/XML')
+def journaldisciplineXML(discipline_id):
+	journal_list = session.query(Journals).filter(Journals.discipline_id == discipline_id).all()
+	serialized_list = [j.serialize for j in journal_list]
+	dictionary = {}
+	dictionary['journal'] = serialized_list
+	parsed_xml = dict2xml(dictionary, wrap="discipline", indent="    ")
+	return render_template('xml.xml', parsed_xml = parsed_xml)
+
+@app.route('/journal/<int:journal_id>/XML')
+def journalXML(journal_id):
+	journal = session.query(Journals).filter(Journals.id == journal_id).one()
+	parsed_xml = dict2xml(journal.serialize, wrap="journal", indent="    ")
+	return render_template('xml.xml', parsed_xml = parsed_xml)
+
 
 # @app.route('/login')
 
@@ -197,6 +222,7 @@ def journalJSON(journal_id):
 
 if __name__ == '__main__':
   app.secret_key = 'super_secret_key'
-  app.debug = True
+  app.debug = True  
   app.run(host = '0.0.0.0', port = 5000)
+
 

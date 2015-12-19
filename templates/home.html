@@ -10,7 +10,7 @@
 {% endfor %}
 <br><br>
 {% for j in items %}
-	<h5><a href="{{url_for('journalPage', journal_id = j.id)}}"> {{j.title}} </a></h5>
+	<h5><a href="{{url_for('journalPage', journal_id = j.id)}}"> {{j.title}} </a> - {{j.disciplines.name}}</h5>
 	<p> <a href="{{url_for('deleteJournal', journal_id = j.id)}}"> Delete </a> - <a href="{{url_for('editJournal', journal_id = j.id)}}"> Edit </a></p>
 {% endfor %}
 
