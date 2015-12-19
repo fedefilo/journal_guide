@@ -98,14 +98,14 @@ def deleteDiscipline(discipline_id):
 		discipline_name = session.query(Disciplines).filter(Disciplines.id == discipline_id).one().name
 		return render_template('delete_discipline.html', title = "Delete discipline", discipline = discipline_name)
 	if request.method == 'POST':
-			discipline = session.query(Disciplines).filter(Disciplines.id == discipline_id).one()
-			journals = session.query(Journals).filter(Journals.discipline_id == discipline.id).all()
-			if len(journals) == 0:
-				session.delete(discipline)
-				session.commit()
-				return redirect(url_for('HomePage'))
-			else:
-				return render_template('disciplineNotEmpty.html')
+		discipline = session.query(Disciplines).filter(Disciplines.id == discipline_id).one()
+		journals = session.query(Journals).filter(Journals.discipline_id == discipline.id).all()
+		if len(journals) == 0:
+			session.delete(discipline)
+			session.commit()
+			return redirect(url_for('HomePage'))
+		else:
+			return render_template('disciplineNotEmpty.html')
 
 # Delete journal
 
@@ -119,8 +119,49 @@ def deleteJournal(journal_id):
 		session.commit()
 		return redirect(url_for('HomePage'))
 			
+# Edit discipline
+@app.route('/disciplines/<int:discipline_id>/edit', methods = ['GET', 'POST'])
+def editDiscipline(discipline_id):
+	discipline = session.query(Disciplines).filter(Disciplines.id == discipline_id).one() 
+	if request.method == 'GET':
+		return render_template('editDiscipline.html', title = "Edit discipline", discipline = discipline.name)
+	if request.method == 'POST':
+		if request.form['name']:
+			discipline.name = request.form['name']
+		return redirect(url_for('HomePage'))
 
-
+# Edit journal
+@app.route('/journal/<int:journal_id>/edit', methods = ['GET', 'POST'])
+def editJournal(journal_id):
+	journal = session.query(Journals).filter(Journals.id == journal_id).one()
+	if request.method == 'GET':
+		discipline_list = session.query(Disciplines).all()
+		return render_template('editJournal.html', title = "Edit journal", journal = journal, disciplines = discipline_list)
+	if request.method == 'POST':
+		if request.form['name']:
+			journal.title = request.form['name']
+		if request.form['issn']:
+			journal.issn = request.form['issn']
+		if request.form['publisher']:
+			journal.publisher = request.form['publisher']
+		if request.form['editor']:
+			journal.chief_editor = request.form['editor']
+		if request.form['discipline']:
+			journal.discipline_id = request.form['discipline']
+		if request.form['issues']:
+			journal.issues_per_year = request.form['issues']
+		if request.form['foundation']:
+			journal.foundation_year= request.form['foundation']
+		if request.form['description']:
+			journal.description = request.form['description']
+		if request.files['picture']:
+		 	file = request.files['picture']
+		 	if file and allowed_file(file.filename):
+		 		name, file_extension = os.path.splitext(file.filename)
+		 		filename = secure_filename(str(journal.id)) + file_extension
+		 		file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+		 		journal.picture = filename	
+		return redirect(url_for('journalPage', journal_id = journal_id))
 
 
 # @app.route('/login')
