@@ -1,7 +1,11 @@
-{% extends "main.html" %}
-{% block content %}
-<!--FACEBOOK SIGN IN -->
-<script>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,300,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script>
   window.fbAsyncInit = function() {
     FB.init({
       appId      : '1651801211760104',
@@ -48,8 +52,9 @@
     });
   }
 </script>
-
-
+</head>
+<body>
+<div class="container">
 <button>
          
 
@@ -60,6 +65,8 @@
 
 
         </button>
-<!--END FACEBOOK SIGN IN -->
 
-{% endblock %}
+<!--END FACEBOOK SIGN IN -->
+</div>
+</body>
+</html> 

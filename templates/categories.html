@@ -7,5 +7,5 @@
 		<p> <em>ISSN: </em>{{j.issn}}</p>
 		<p> <em>Description: </em>{{j.description}}</p>
 	{% endfor %}
-
+<p> Download information about journals in {{title}} in: <a href="{{url_for('journaldisciplineJSON', discipline_id = discipline.id)}}"> JSON </a> - <a href="{{url_for('journaldisciplineXML', discipline_id = discipline.id)}}"> XML </a></p>
 {% endblock %}

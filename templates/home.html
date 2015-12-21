@@ -8,6 +8,7 @@
 	<h5> <a href="{{url_for('discipline', discipline_id = d.id)}}">{{d.name}} </a></h5>
 	<p> <a href="{{url_for('deleteDiscipline', discipline_id = d.id)}}"> Delete </a> - <a href="{{url_for('editDiscipline', discipline_id = d.id)}}"> Edit </a></p>
 {% endfor %}
+<p> Download disciplines list in: <a href="{{url_for('disciplinesJSON')}}"> JSON </a> - <a href="{{url_for('disciplinesXML')}}"> XML </a></p>
 <br><br>
 {% for j in items %}
 	<h5><a href="{{url_for('journalPage', journal_id = j.id)}}"> {{j.title}} </a> - {{j.disciplines.name}}</h5>

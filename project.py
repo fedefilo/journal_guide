@@ -58,8 +58,8 @@ def HomePage():
 @app.route('/disciplines/<int:discipline_id>/')
 def discipline(discipline_id):
 	journals = session.query(Journals).filter_by(discipline_id = discipline_id)
-	discipline_name = session.query(Disciplines).filter_by(id = discipline_id).one()
-	return render_template("categories.html", title = discipline_name.name, items = journals, name = discipline_name.name)
+	discipline = session.query(Disciplines).filter_by(id = discipline_id).one()
+	return render_template("categories.html", title = discipline.name, discipline = discipline, items = journals)
 
 # Page for each journal
 @app.route('/journal/<int:journal_id>/')
