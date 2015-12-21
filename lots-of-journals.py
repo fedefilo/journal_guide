@@ -31,8 +31,8 @@ session.add(discipline4)
 session.commit()
 
 # Add test users
-user1 = Users(first_name = "Fede", last_name = "Vazquez", email = "f@f.com")
-user2 = Users(first_name = "Vicky", last_name = "Baratta", email = "v@v.com")
+user1 = Users(name = "Fede", email = "f@f.com")
+user2 = Users(name = "Vicky", email = "v@v.com")
 
 session.add(user1)
 session.add(user2)

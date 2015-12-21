@@ -1,5 +1,6 @@
 {% extends "main.html" %}
 {% block content %}
+{{login_session}}
 <h4> <a href="{{url_for('newDiscipline')}}"> Add New Discipline</a></h4>
 <h4> <a href="{{url_for('newJournal')}}"> Add New Journal</a></h4>
 <br><br>
