@@ -18,7 +18,7 @@ from flask import make_response
 import requests
 
 UPLOAD_FOLDER = 'static/pictures'
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
 
 engine = create_engine('sqlite:///journals.db')
@@ -65,6 +65,7 @@ def discipline(discipline_id):
 @app.route('/journal/<int:journal_id>/')
 def journalPage(journal_id):
 	journal = session.query(Journals).filter_by(id = journal_id).one()
+	print journal.picture
 	if journal.picture is None:
 		journal.picture = "default.jpg"
 	discipline_name = session.query(Disciplines).filter_by(id = journal.discipline_id).one()
@@ -90,7 +91,7 @@ def newJournal():
 		discipline_list = session.query(Disciplines).all()
 		return render_template('new_journal.html', title = "New Journal", disciplines = discipline_list)
 	if request.method == 'POST':
-		newJournal = Journals(title= request.form['name'], issn = request.form['issn'], publisher = request.form['publisher'], chief_editor = request.form['editor'], issues_per_year = request.form['issues'], foundation_year = request.form['foundation'], discipline_id = request.form['discipline'],description = request.form['description'])
+		newJournal = Journals(title= request.form['name'], issn = request.form['issn'], publisher = request.form['publisher'], chief_editor = request.form['editor'], issues_per_year = request.form['issues'], foundation_year = request.form['foundation'], discipline_id = request.form['discipline'],description = request.form['description'], user_id = login_session['user_id'])
 		session.add(newJournal)
 		session.commit()
 		journals = session.query(Journals).order_by(Journals.id).all()
@@ -100,6 +101,7 @@ def newJournal():
 			name, file_extension = os.path.splitext(file.filename)
 			filename = secure_filename(str(newJournal.id)) + file_extension
 			file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+			print "filename: " + filename
 			newJournal.picture = filename
 		return redirect(url_for('HomePage'))
 
@@ -118,13 +120,15 @@ def deleteDiscipline(discipline_id):
 			session.commit()
 			return redirect(url_for('HomePage'))
 		else:
-			return render_template('disciplineNotEmpty.html')
+			return render_template('error.html', title = "Error", reason = "You have to delete all the journals in the discipline first")
 
 # Delete journal
 
 @app.route('/journal/<int:journal_id>/delete', methods = ['GET', 'POST'])
 def deleteJournal(journal_id):
 	journal = session.query(Journals).filter(Journals.id == journal_id).one()
+	if 'user_id' not in login_session or journal.user_id != login_session['user_id']:
+		return render_template('error.html', title = "Error", reason = "You can only edit or delete the journals you've created")
 	if request.method == 'GET':
 		return render_template('delete_journal.html', title = "Delete journal", journal = journal.title)
 	if request.method == 'POST':
@@ -147,6 +151,8 @@ def editDiscipline(discipline_id):
 @app.route('/journal/<int:journal_id>/edit', methods = ['GET', 'POST'])
 def editJournal(journal_id):
 	journal = session.query(Journals).filter(Journals.id == journal_id).one()
+	if 'user_id' not in login_session or journal.user_id != login_session['user_id']:
+		return render_template('error.html', title = "Error", reason = "You can only edit or delete the journals you've created")
 	if request.method == 'GET':
 		discipline_list = session.query(Disciplines).all()
 		return render_template('editJournal.html', title = "Edit journal", journal = journal, disciplines = discipline_list)
@@ -173,6 +179,7 @@ def editJournal(journal_id):
 		 		name, file_extension = os.path.splitext(file.filename)
 		 		filename = secure_filename(str(journal.id)) + file_extension
 		 		file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+		 		print "filename: " + filename
 		 		journal.picture = filename	
 		return redirect(url_for('journalPage', journal_id = journal_id))
 
