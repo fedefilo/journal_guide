@@ -1,8 +1,9 @@
 *FSND Project 3 / Journal Item Catalog*
-
 *This is Udacity's FSND 3rd Project*
+* by Federico Vasen *
 
 **About the application**
+
 It is a catalog of scholarly journals.
 Visitors can navigate categories and item pages and access information in JSON and XML.
 Logged users can add journals and disciplines. 
@@ -13,7 +14,7 @@ Some screenshots provided in the screenshot folder.
 
 **Installation instructions**
 
-1. Clone the current repository in a local folder
+1. Clone the current repository inside the Fullstack Nanodegree Vagrant machine
 2. If not already available, install SeaSurf CSRF Flask Extension
    sudo pip install flask-seasurf
 3. Run database_setup.py to create the SQLite database
