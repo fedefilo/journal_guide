@@ -19,7 +19,7 @@ Some screenshots provided in the screenshot folder.
 
 1. Clone the current repository inside the Fullstack Nanodegree Vagrant machine
 2. If not already available, install SeaSurf CSRF Flask Extension
-   sudo pip install flask-seasurf
+`sudo pip install flask-seasurf`
 3. Run database_setup.py to create the SQLite database
 4. Run lots-of-journals.py to populate the database with some test journals (not available for editing by registered users)
 5. Run project.py
