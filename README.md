@@ -12,6 +12,7 @@ Logged users can add journals and disciplines.
 Disciplines can be added and deleted by all users/
 Journals can only be edited or deleted by the user that created the entry.
 Login and registration only possible with a Facebook account.
+**Login works OK in a Chrome incognito window. Please test it there.**
 Some screenshots provided in the screenshot folder.
 
 **Installation instructions**
