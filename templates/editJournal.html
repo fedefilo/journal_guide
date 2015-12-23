@@ -1,15 +1,14 @@
 {% extends "main.html" %}
 {% block content %}
-{{journal.discipline_id}}
 	<div class="row divider green">
 		<div class="col-md-12"></div>
 	</div>
 	<div class="row banner menu">
 		<div class="col-md-11 col-md-offset-1 padding-none">
-			<h1>Edit {{journal.title}}</h1>
+			<h2>Please update the information in "{{journal.title}}"</h2>
 		</div>
 	</div>
-	<div>
+	<div class="col-md-8">
 	<div class="form-group">
 	<form method="POST" enctype="multipart/form-data"  action="#">
 	<label for="name">Title: </label><input class="form-control" type="text" name="name" value="{{journal.title}}" required>
@@ -27,7 +26,11 @@
 	<label for="description">Description: </label><input class="form-control" type="text" name="description"value="{{journal.description}}">
 	<label for="picture"> Cover picture: </label> <input  class="form-control" type="file" name="picture">
 	<input class="btn btn-default" type="submit" value="Edit">
-</form>
+	</form>
+	<a href = '{{url_for('HomePage')}}'>
+		<button class="btn btn-default delete">
+		<span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cancel</button>
+	</a>
 </div>
 </div>
 {% endblock %}

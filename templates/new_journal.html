@@ -1,6 +1,7 @@
 {% extends "main.html" %}
 {% block content %}
 <h1> Add new journal </h1>
+<div class="col-md-8">
 <div class="form-group">
 <form method="POST" enctype="multipart/form-data"  action="#">
 <label for="name">Title: </label><input class="form-control"type="text" name="name" required>
@@ -20,5 +21,10 @@
 <label for="picture"> Cover picture: </label> <input  class="form-control" type="file" name="picture">
 <input class="btn btn-default" type="submit" value="Add">
 </form>
+<a href = '{{url_for('HomePage')}}'>
+<button class="btn btn-default delete">
+<span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cancel</button>
+</a>
+</div>
 </div>
 {% endblock %}

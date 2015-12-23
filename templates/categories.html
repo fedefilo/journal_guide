@@ -1,11 +1,24 @@
 {% extends "main.html" %}
 {% block content %}
-
-	<h2> {{title}}
+<div class = "col-md-10">
+	<h2> Journals in "{{title}}" </h2>
+	<br><br>
 	{% for j in items %}
 		<h4> <em>Title: </em> <a href="{{url_for('journalPage', journal_id = j.id)}}">{{j.title}}</a></h4>
 		<p> <em>ISSN: </em>{{j.issn}}</p>
 		<p> <em>Description: </em>{{j.description}}</p>
+
+	{%if 'username' in session and session['user_id'] == j.user_id %}
+		<p> You have permission to: - <a href="{{url_for('deleteJournal', journal_id = j.id)}}"><span class="glyphicon glyphicon-trash" title="delete"></span></a> - <a href="{{url_for('editJournal', journal_id = j.id)}}"> <span class="glyphicon glyphicon-edit" title="edit"></span> </a></p>
+		<br>
+	{% else %}
+		<p> You have no permission to modify this journal </p>
+		<br>
+	{% endif %}
+	
 	{% endfor %}
 <p> Download information about journals in {{title}} in: <a href="{{url_for('journaldisciplineJSON', discipline_id = discipline.id)}}"> JSON </a> - <a href="{{url_for('journaldisciplineXML', discipline_id = discipline.id)}}"> XML </a></p>
+<br>
+
+</div>
 {% endblock %}

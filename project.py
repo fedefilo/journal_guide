@@ -18,7 +18,7 @@ from flask import make_response
 import requests
 
 UPLOAD_FOLDER = 'static/pictures'
-ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif', 'PNG', 'JPG', 'JPEG', 'GIF'])
 
 
 engine = create_engine('sqlite:///journals.db')
@@ -52,7 +52,7 @@ def HomePage():
 	allr = session.query(Journals).join(Disciplines, Disciplines.id == Journals.discipline_id)
 	disciplines = session.query(Disciplines).all()
 	print login_session	
-	return render_template('home.html', title = "HomePage", items = allr, disciplines = disciplines)
+	return render_template('home.html', title = "Home Page", items = allr, disciplines = disciplines)
 
 # Page for each discipline
 @app.route('/disciplines/<int:discipline_id>/')
@@ -103,6 +103,7 @@ def newJournal():
 			file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 			print "filename: " + filename
 			newJournal.picture = filename
+			flash('New journal successfully added')
 		return redirect(url_for('HomePage'))
 
 # Delete discipline
@@ -118,6 +119,7 @@ def deleteDiscipline(discipline_id):
 		if len(journals) == 0:
 			session.delete(discipline)
 			session.commit()
+			flash('Discipline deleted')
 			return redirect(url_for('HomePage'))
 		else:
 			return render_template('error.html', title = "Error", reason = "You have to delete all the journals in the discipline first")
@@ -134,6 +136,7 @@ def deleteJournal(journal_id):
 	if request.method == 'POST':
 		session.delete(journal)
 		session.commit()
+		flash('Journal deleted')		
 		return redirect(url_for('HomePage'))
 			
 # Edit discipline
@@ -145,6 +148,7 @@ def editDiscipline(discipline_id):
 	if request.method == 'POST':
 		if request.form['name']:
 			discipline.name = request.form['name']
+			flash('Discipline name updated')
 		return redirect(url_for('HomePage'))
 
 # Edit journal
@@ -180,7 +184,8 @@ def editJournal(journal_id):
 		 		filename = secure_filename(str(journal.id)) + file_extension
 		 		file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 		 		print "filename: " + filename
-		 		journal.picture = filename	
+		 		journal.picture = filename
+		flash('Journal info updated') 	
 		return redirect(url_for('journalPage', journal_id = journal_id))
 
 # JSON API routes

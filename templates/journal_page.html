@@ -13,4 +13,12 @@
 	<p> <em>Description: </em>{{item.description}}</p>
 
 <p> Download journal info in: <a href="{{url_for('journalJSON', journal_id = item.id)}}"> JSON </a> - <a href="{{url_for('journalXML', journal_id = item.id)}}"> XML </a></p>
+
+	{%if 'username' in session and session['user_id'] == item.user_id %}
+		<p> You have permission to: - <a href="{{url_for('deleteJournal', journal_id = item.id)}}"><span class="glyphicon glyphicon-trash" title="delete"></span></a> - <a href="{{url_for('editJournal', journal_id = item.id)}}"> <span class="glyphicon glyphicon-edit" title="edit"></span> </a></p>
+		<br>
+	{% else %}
+		<p> You have no permission to modify this journal </p>
+		<br>
+	{% endif %}
 {% endblock %}
