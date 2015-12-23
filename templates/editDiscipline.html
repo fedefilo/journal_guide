@@ -12,6 +12,7 @@
 		<div class="col-md-6 col-md-offset-1 padding-top">
 			<div class="form-group">
 				<form action="#" method = "post">
+				<input name=_csrf_token type=hidden value="{{ csrf_token() }}">
 					<label for="name">Name:</label>
 					<input type ="text" class="form-control" name="name" placeholder="New name for discipline">
 					<div class="padding-bottom"></div>

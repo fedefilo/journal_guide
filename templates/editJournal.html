@@ -11,6 +11,7 @@
 	<div class="col-md-8">
 	<div class="form-group">
 	<form method="POST" enctype="multipart/form-data"  action="#">
+	<input name=_csrf_token type=hidden value="{{ csrf_token() }}">
 	<label for="name">Title: </label><input class="form-control" type="text" name="name" value="{{journal.title}}" required>
 	<label for="issn">ISSN: </label><input  class="form-control" type="text" name="issn" value="{{journal.issn}}" required>
 	<label for="publisher">Publisher: </label><input  class="form-control" type="text" name="publisher" value="{{journal.publisher}}">

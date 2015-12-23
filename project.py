@@ -10,8 +10,7 @@ from sqlalchemy.orm import sessionmaker
 from werkzeug import secure_filename
 from database_setup import Users, Disciplines, Journals, Base
 from xmlconverter import *
-
-# IMPORTS FOR THIS STEP
+from flask.ext.seasurf import SeaSurf
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
 import httplib2
@@ -40,13 +39,13 @@ session = DBSession()
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-#app.debug = True
+csrf = SeaSurf(app)
 
 # Allowed file extensions
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
 
 # Home Page
 @app.route('/')
