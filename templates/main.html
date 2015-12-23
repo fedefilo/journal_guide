@@ -8,16 +8,26 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	</head>
 	<body>
-		<div id="header">
-			{%if 'username' not in session %}
-			<a href="{{url_for('showLogin')}}">Click Here to Login </a>
-			{% else %}
-			<p> Logged in as {{session['username']}}</p>
-			<a href="{{url_for('fbdisconnect')}}">Logout </a>
-			{% endif %}
+	<nav class="navbar navbar-default">
+    <div class="container-fluid">
+    <div class="navbar-header">
+     <a class="navbar-brand" href="/">Fede Journal Guide</a>
+    </div>
+    <div class="nav navbar-nav navbar-right">
+	{%if 'username' not in session %}
+		<span class="glyphicon glyphicon-log-in"></span><a href="{{url_for('showLogin')}}"> Click Here to Login </a>
+	{% else %}
+		<p> Logged in as {{session['username']}}</p>
+		<span class="glyphicon glyphicon-log-in"></span> <a href="{{url_for('fbdisconnect')}}"> Logout </a>
+	{% endif %}
+    </div>
+  </div>
+</nav>
+		<div class="row">
 		<div class="container">
 			{% block content %}
 			{% endblock %}
+		</div>
 		</div>
 	</body>
 </html>
