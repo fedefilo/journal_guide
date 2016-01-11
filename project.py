@@ -1,3 +1,10 @@
+# 1 check login status with decorator
+# 2 delete on cascade al borrar discipline?
+# 3 chequear auth status en new disc/new journal
+# 4 endpoints en readme y requirements.txt
+# 6 delete local picture file 
+# 7 redirect to homepage if not logged, to error if not authorized
+
 # Udacity Full Stack Web Developer Nanodegree
 # Project 3 - Item catalog
 # Journal Catalog App
@@ -25,9 +32,11 @@ from flask import make_response
 import requests
 
 # Configuration for uploads
+# Files allowed must be smaller than 5 MB and have an extension for images
 UPLOAD_FOLDER = 'static/pictures'
 ALLOWED_EXTENSIONS = set(
     ['png', 'jpg', 'jpeg', 'gif', 'PNG', 'JPG', 'JPEG', 'GIF'])
+MAX_CONTENT_LENGTH = 5 * 1024 * 1024
 
 # Database settings
 engine = create_engine('sqlite:///journals.db')
@@ -35,11 +44,12 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
-# Starts app and CSRF protection
+# Starts app, configs uploads and CSRF protection
 # CSRF protection implemented using SeaSurf Flask Module -
 # https://github.com/maxcountryman/flask-seasurf
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = MAX_CONTENT_LENGTH
 csrf = SeaSurf(app)
 
 
