@@ -160,6 +160,7 @@ def deleteJournal(journal_id):
         return render_template('delete_journal.html', title="Delete journal", journal=journal.title)
     if request.method == 'POST':
         session.delete(journal)
+        os.remove(os.path.join(app.config['UPLOAD_FOLDER'], journal.picture))
         session.commit()
         flash('Journal deleted')
         return redirect(url_for('HomePage'))
