@@ -1,7 +1,4 @@
-# 1 check login status with decorator
 # 2 delete on cascade al borrar discipline?
-# 3 chequear auth status en new disc/new journal
-# 7 redirect to homepage if not logged, to error if not authorized
 
 # Udacity Full Stack Web Developer Nanodegree
 # Project 3 - Item catalog
@@ -167,7 +164,7 @@ def deleteDiscipline(discipline_id):
 def deleteJournal(journal_id):
     journal = session.query(Journals).filter(Journals.id == journal_id).one()
     # Renders and error page if user has not created this object and therefore is not authorized to delete it
-    if 'user_id' not in login_session or journal.user_id != login_session['user_id']:
+    if journal.user_id != login_session['user_id']:
         return render_template('error.html', title="Error", reason="You can only edit or delete the journals you've created")
     if request.method == 'GET':
         return render_template('delete_journal.html', title="Delete journal", journal=journal.title)
@@ -200,7 +197,7 @@ def editDiscipline(discipline_id):
 def editJournal(journal_id):
     journal = session.query(Journals).filter(Journals.id == journal_id).one()
     # Renders and error page if user has not created this object and therefore is not authorized to delete it
-    if 'user_id' not in login_session or journal.user_id != login_session['user_id']:
+    if journal.user_id != login_session['user_id']:
         return render_template('error.html', title="Error", reason="You can only edit or delete the journals you've created")
     if request.method == 'GET':
         discipline_list = session.query(Disciplines).all()
