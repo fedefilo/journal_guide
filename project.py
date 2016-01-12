@@ -1,8 +1,6 @@
 # 1 check login status with decorator
 # 2 delete on cascade al borrar discipline?
 # 3 chequear auth status en new disc/new journal
-# 4 endpoints en readme y requirements.txt
-# 6 delete local picture file 
 # 7 redirect to homepage if not logged, to error if not authorized
 
 # Udacity Full Stack Web Developer Nanodegree
@@ -26,6 +24,7 @@ from xmlconverter import *
 from flask.ext.seasurf import SeaSurf
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
+from functools import wraps
 import httplib2
 import json
 from flask import make_response
@@ -59,6 +58,16 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 
+# Login required decorator
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user_id' not in login_session:
+            return redirect(url_for('showLogin'))
+        return f(*args, **kwargs)
+    return decorated_function
+
 # Route for rendering Home Page
 @app.route('/')
 def HomePage():
@@ -90,6 +99,7 @@ def journalPage(journal_id):
 
 # Add new discipline
 @app.route('/new_discipline/', methods=['GET', 'POST'])
+@login_required
 def newDiscipline():
     if request.method == 'GET':
         return render_template('new_discipline.html', title="New Discipline")
@@ -103,6 +113,7 @@ def newDiscipline():
 
 # Add new journal
 @app.route('/new_journal/', methods=['GET', 'POST'])
+@login_required
 def newJournal():
     if request.method == 'GET':
         discipline_list = session.query(Disciplines).all()
@@ -129,6 +140,7 @@ def newJournal():
 
 # Delete discipline
 @app.route('/disciplines/<int:discipline_id>/delete', methods=['GET', 'POST'])
+@login_required
 def deleteDiscipline(discipline_id):
     if request.method == 'GET':
         discipline_name = session.query(Disciplines).filter(
@@ -151,6 +163,7 @@ def deleteDiscipline(discipline_id):
 
 # Delete journal
 @app.route('/journal/<int:journal_id>/delete', methods=['GET', 'POST'])
+@login_required
 def deleteJournal(journal_id):
     journal = session.query(Journals).filter(Journals.id == journal_id).one()
     # Renders and error page if user has not created this object and therefore is not authorized to delete it
@@ -168,6 +181,7 @@ def deleteJournal(journal_id):
 
 # Edit discipline
 @app.route('/disciplines/<int:discipline_id>/edit', methods=['GET', 'POST'])
+@login_required
 def editDiscipline(discipline_id):
     discipline = session.query(Disciplines).filter(
         Disciplines.id == discipline_id).one()
@@ -182,6 +196,7 @@ def editDiscipline(discipline_id):
 
 # Edit journal
 @app.route('/journal/<int:journal_id>/edit', methods=['GET', 'POST'])
+@login_required
 def editJournal(journal_id):
     journal = session.query(Journals).filter(Journals.id == journal_id).one()
     # Renders and error page if user has not created this object and therefore is not authorized to delete it
