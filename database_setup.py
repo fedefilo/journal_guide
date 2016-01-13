@@ -17,10 +17,18 @@ Base = declarative_base()
 # Create tables
 
 
+class Users(Base):
+    __tablename__ = 'users'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(100), nullable=False)
+    email = Column(String(100), nullable=False)
+
 class Disciplines(Base):
     __tablename__ = 'disciplines'
     name = Column(String(80), nullable=False)
     id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    users = relationship(Users)
 
     @property
     def serialize(self):
@@ -28,16 +36,8 @@ class Disciplines(Base):
         return {
             'id': self.id,
             'name': self.name,
+            'user_id': self.user_id,
         }
-
-
-class Users(Base):
-    __tablename__ = 'users'
-    id = Column(Integer, primary_key=True)
-    name = Column(String(100), nullable=False)
-    email = Column(String(100), nullable=False)
-
-
 class Journals(Base):
     __tablename__ = 'journals'
     id = Column(Integer, primary_key=True)

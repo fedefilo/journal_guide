@@ -101,7 +101,7 @@ def newDiscipline():
     if request.method == 'GET':
         return render_template('new_discipline.html', title="New Discipline")
     if request.method == 'POST':
-        newDiscipline = Disciplines(name=request.form['name'])
+        newDiscipline = Disciplines(name=request.form['name'], user_id=login_session['user_id'])
         session.add(newDiscipline)
         session.commit()
         flash('New discipline successfully added')
@@ -146,9 +146,12 @@ def deleteDiscipline(discipline_id):
     if request.method == 'POST':
         discipline = session.query(Disciplines).filter(
             Disciplines.id == discipline_id).one()
-        journals = session.query(Journals).filter(
-            Journals.discipline_id == discipline.id).all()
+        # Checks authorization to delete discipline
+        if discipline.user_id != login_session['user_id']:
+	        return render_template('error.html', title="Error", reason="You can only edit or delete the disciplines you've created")
         # Checks whether there are journals registered with the discipline the user intends to delete
+        journals = session.query(Journals).filter(
+        Journals.discipline_id == discipline.id).all()
         if len(journals) == 0:
             session.delete(discipline)
             session.commit()
@@ -182,6 +185,9 @@ def deleteJournal(journal_id):
 def editDiscipline(discipline_id):
     discipline = session.query(Disciplines).filter(
         Disciplines.id == discipline_id).one()
+    # Checks authorization to delete discipline
+    if discipline.user_id != login_session['user_id']:
+        return render_template('error.html', title="Error", reason="You can only edit or delete the disciplines you've created")
     if request.method == 'GET':
         return render_template('editDiscipline.html', title="Edit discipline", discipline=discipline.name)
     if request.method == 'POST':

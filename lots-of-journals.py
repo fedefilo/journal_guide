@@ -19,24 +19,25 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 
+# Add test users
+user1 = Users(name="Fede", email="f@f.com")
+user2 = Users(name="Vicky", email="tester_ppbeldx_smith@tfbnw.net")
+
+session.add(user1)
+session.add(user2)
+session.commit()
+
 # Add Disciplines
-discipline1 = Disciplines(name="Geography")
-discipline2 = Disciplines(name="Philosophy")
-discipline3 = Disciplines(name="History")
-discipline4 = Disciplines(name="Political Science")
+discipline1 = Disciplines(name="Geography", users=user1)
+discipline2 = Disciplines(name="Philosophy", users=user1)
+discipline3 = Disciplines(name="History", users=user2)
+discipline4 = Disciplines(name="Political Science", users=user2)
 session.add(discipline1)
 session.add(discipline2)
 session.add(discipline3)
 session.add(discipline4)
 session.commit()
 
-# Add test users
-user1 = Users(name="Fede", email="f@f.com")
-user2 = Users(name="Vicky", email="v@v.com")
-
-session.add(user1)
-session.add(user2)
-session.commit()
 
 # Add two journals per discipline
 

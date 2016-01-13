@@ -5,3 +5,4 @@ SQLAlchemy == 0.8.4
 Werkzeug == 0.9.4
 google_api_python_client == 1.4.2
 Requests == 2.9.1
+flask-seasurf == 0.2.1

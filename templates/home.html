@@ -12,7 +12,7 @@
 <h2> Disciplines </h2>
 {% for d in disciplines %}
 	<h5> <a href="{{url_for('discipline', discipline_id = d.id)}}">{{d.name}} </a> 
-	{%if 'username' in session %}
+	{%if 'username' in session and session['user_id'] == d.user_id %}
 		- <a href="{{url_for('deleteDiscipline', discipline_id = d.id)}}"> <span class="glyphicon glyphicon-trash" title="Delete"></span> </a> - <a href="{{url_for('editDiscipline', discipline_id = d.id)}}"> <span class="glyphicon glyphicon-edit" title="edit"></span></a>
 	{% endif %}
 	</h5>
