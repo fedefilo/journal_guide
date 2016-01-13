@@ -23,6 +23,7 @@ class Users(Base):
     name = Column(String(100), nullable=False)
     email = Column(String(100), nullable=False)
 
+
 class Disciplines(Base):
     __tablename__ = 'disciplines'
     name = Column(String(80), nullable=False)
@@ -38,6 +39,8 @@ class Disciplines(Base):
             'name': self.name,
             'user_id': self.user_id,
         }
+
+
 class Journals(Base):
     __tablename__ = 'journals'
     id = Column(Integer, primary_key=True)

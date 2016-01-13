@@ -1,5 +1,3 @@
-# 2 delete on cascade al borrar discipline?
-
 # Udacity Full Stack Web Developer Nanodegree
 # Project 3 - Item catalog
 # Journal Catalog App
@@ -66,6 +64,8 @@ def login_required(f):
     return decorated_function
 
 # Route for rendering Home Page
+
+
 @app.route('/')
 def HomePage():
     allr = session.query(Journals).join(
@@ -86,7 +86,8 @@ def discipline(discipline_id):
 @app.route('/journal/<int:journal_id>/')
 def journalPage(journal_id):
     journal = session.query(Journals).filter_by(id=journal_id).one()
-    # When no information about picture is in the DB, a default image is displayed
+    # When no information about picture is in the DB, a default image is
+    # displayed
     if journal.picture is None:
         journal.picture = "default.jpg"
     discipline_name = session.query(Disciplines).filter_by(
@@ -101,7 +102,8 @@ def newDiscipline():
     if request.method == 'GET':
         return render_template('new_discipline.html', title="New Discipline")
     if request.method == 'POST':
-        newDiscipline = Disciplines(name=request.form['name'], user_id=login_session['user_id'])
+        newDiscipline = Disciplines(
+            name=request.form['name'], user_id=login_session['user_id'])
         session.add(newDiscipline)
         session.commit()
         flash('New discipline successfully added')
@@ -121,13 +123,15 @@ def newJournal():
                               'issues'], foundation_year=request.form['foundation'], discipline_id=request.form['discipline'], description=request.form['description'], user_id=login_session['user_id'])
         session.add(newJournal)
         session.commit()
-        # Queries the DB to get the ID of the new journal and uses it as filename for uploading the image
+        # Queries the DB to get the ID of the new journal and uses it as
+        # filename for uploading the image
         journals = session.query(Journals).order_by(Journals.id).all()
         newJournal = journals[-1]
         file = request.files['picture']
         if file and allowed_file(file.filename):
             name, file_extension = os.path.splitext(file.filename)
-            # Original filename is replaced by the ID of the new journal. Extension remains unmodified.
+            # Original filename is replaced by the ID of the new journal.
+            # Extension remains unmodified.
             filename = secure_filename(str(newJournal.id)) + file_extension
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             newJournal.picture = filename
@@ -148,10 +152,11 @@ def deleteDiscipline(discipline_id):
             Disciplines.id == discipline_id).one()
         # Checks authorization to delete discipline
         if discipline.user_id != login_session['user_id']:
-	        return render_template('error.html', title="Error", reason="You can only edit or delete the disciplines you've created")
-        # Checks whether there are journals registered with the discipline the user intends to delete
+            return render_template('error.html', title="Error", reason="You can only edit or delete the disciplines you've created")
+        # Checks whether there are journals registered with the discipline the
+        # user intends to delete
         journals = session.query(Journals).filter(
-        Journals.discipline_id == discipline.id).all()
+            Journals.discipline_id == discipline.id).all()
         if len(journals) == 0:
             session.delete(discipline)
             session.commit()
@@ -166,7 +171,8 @@ def deleteDiscipline(discipline_id):
 @login_required
 def deleteJournal(journal_id):
     journal = session.query(Journals).filter(Journals.id == journal_id).one()
-    # Renders and error page if user has not created this object and therefore is not authorized to delete it
+    # Renders and error page if user has not created this object and therefore
+    # is not authorized to delete it
     if journal.user_id != login_session['user_id']:
         return render_template('error.html', title="Error", reason="You can only edit or delete the journals you've created")
     if request.method == 'GET':
@@ -202,7 +208,8 @@ def editDiscipline(discipline_id):
 @login_required
 def editJournal(journal_id):
     journal = session.query(Journals).filter(Journals.id == journal_id).one()
-    # Renders and error page if user has not created this object and therefore is not authorized to delete it
+    # Renders and error page if user has not created this object and therefore
+    # is not authorized to delete it
     if journal.user_id != login_session['user_id']:
         return render_template('error.html', title="Error", reason="You can only edit or delete the journals you've created")
     if request.method == 'GET':
@@ -228,7 +235,8 @@ def editJournal(journal_id):
         if request.files['picture']:
             file = request.files['picture']
             if file and allowed_file(file.filename):
-                # Original filename is replaced by the ID of the journal being modified. Extension remains unchanged.
+                # Original filename is replaced by the ID of the journal being
+                # modified. Extension remains unchanged.
                 name, file_extension = os.path.splitext(file.filename)
                 filename = secure_filename(str(journal.id)) + file_extension
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
@@ -264,7 +272,8 @@ def journalJSON(journal_id):
 def disciplinesXML():
     disciplines = session.query(Disciplines).all()
     serialized_list = [i.serialize for i in disciplines]
-    # Creates a dictionary that properly renders entries in XML according to the documentation of dict2xml
+    # Creates a dictionary that properly renders entries in XML according to
+    # the documentation of dict2xml
     dictionary = {}
     dictionary['discipline'] = serialized_list
     parsed_xml = dict2xml(dictionary, wrap="discipline", indent="    ")
@@ -276,7 +285,8 @@ def journaldisciplineXML(discipline_id):
     journal_list = session.query(Journals).filter(
         Journals.discipline_id == discipline_id).all()
     serialized_list = [j.serialize for j in journal_list]
-    # Creates a dictionary that properly renders entries in XML according to the documentation of dict2xml
+    # Creates a dictionary that properly renders entries in XML according to
+    # the documentation of dict2xml
     dictionary = {}
     dictionary['journal'] = serialized_list
     parsed_xml = dict2xml(dictionary, wrap="discipline", indent="    ")
@@ -401,6 +411,7 @@ def fbconnect():
     output += '<img src="'
     flash("Now logged in as %s" % login_session['username'])
     return output
+
 
 @csrf.exempt
 @app.route('/fbdisconnect')
